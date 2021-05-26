@@ -560,6 +560,10 @@ def container_to_args(compose, cnt, detached=True):
         podman_args.append('-P')
     for i in cnt.get('ports', []):
         podman_args.extend(['-p', i])
+    #Custom command to add Podman's user namespace command line argument:
+    for i in cnt.get('userns', []):
+        podman_args.extend(['--userns', i])
+
     user = cnt.get('user', None)
     if user is not None:
         podman_args.extend(['-u', user])
@@ -718,7 +722,7 @@ class Podman:
             print(exit_code)
             if obj is not None:
                 obj.exit_code = exit_code
-            
+
         if sleep:
             time.sleep(sleep)
         return p
@@ -943,7 +947,7 @@ class PodmanCompose:
         if services is None:
             services = {}
             print("WARNING: No services defined")
-		
+
         # NOTE: maybe add "extends.service" to _deps at this stage
         flat_deps(services, with_extends=True)
         service_names = sorted([ (len(srv["_deps"]), name) for name, srv in services.items() ])
