@@ -562,7 +562,7 @@ def container_to_args(compose, cnt, detached=True):
         podman_args.extend(['-p', i])
     #Custom command to add Podman's user namespace command line argument:
     if cnt.get('userns', None):
-        podman_args.extend(['--userns', '{}'.format(cnt['shm_size'])])
+        podman_args.extend(['--userns', '{}'.format(cnt['userns'])])
 
     user = cnt.get('user', None)
     if user is not None:
